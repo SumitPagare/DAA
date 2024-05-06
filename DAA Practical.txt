@@ -1,0 +1,2432 @@
+//4queen
+
+#include <stdio.h>
+
+// Function to print the board configuration for the 4 Queens Problem
+void printBoard(int board[4][4]) {
+    printf("Board Configuration:\n");
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            printf("%c ", board[i][j] ? 'Q' : '-');
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    // Sample board configuration for 4 Queens Problem
+    int board[4][4] = {
+        {0, 1, 0, 0},
+        {0, 0, 0, 1},
+        {1, 0, 0, 0},
+        {0, 0, 1, 0}
+    };
+
+    printBoard(board);
+
+    return 0;
+}
+
+____________________________________
+__________________________________
+//bfs
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define V 4 // Number of vertices
+
+// Graph representation using adjacency matrix
+int graph[V][V] = {
+    {0, 1, 1, 0},
+    {0, 0, 1, 0},
+    {1, 0, 0, 1},
+    {0, 0, 0, 1}
+};
+
+// Array to keep track of visited vertices
+bool visited[V];
+
+// Function to initialize the visited array
+void initializeVisited() {
+    for (int i = 0; i < V; i++) {
+        visited[i] = false;
+    }
+}
+
+// Depth First Search (DFS) function
+void DFS(int vertex) {
+    visited[vertex] = true;
+    printf("%d ", vertex);
+
+    for (int i = 0; i < V; i++) {
+        if (graph[vertex][i] && !visited[i]) {
+            DFS(i);
+        }
+    }
+}
+
+// Breadth First Search (BFS) function
+void BFS(int start) {
+    bool queue[V] = {false};
+    int front = 0, rear = 0;
+
+    queue[rear++] = start;
+    visited[start] = true;
+
+    while (front != rear) {
+        int vertex = queue[front++];
+        printf("%d ", vertex);
+
+        for (int i = 0; i < V; i++) {
+            if (graph[vertex][i] && !visited[i]) {
+                queue[rear++] = i;
+                visited[i] = true;
+            }
+        }
+    }
+}
+
+int main() {
+    initializeVisited();
+
+    printf("Depth First Search starting from vertex 0:\n");
+    DFS(0); // Start DFS from vertex 0
+    printf("\n");
+
+    initializeVisited(); // Reset visited array for BFS
+
+    printf("Breadth First Search starting from vertex 0:\n");
+    BFS(0); // Start BFS from vertex 0
+    printf("\n");
+
+    return 0;
+}
+
+
+
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// struct Node { int data; struct Node* next; };
+// struct AdjList { struct Node* head; };
+// struct Graph { int V; struct AdjList* array; };
+// struct QueueNode { int data; struct QueueNode* next; };
+// struct Queue { struct QueueNode *front, *rear; };
+
+// struct Node* new_node(int data) { 
+//     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node)); 
+//     newNode->data = data; 
+//     newNode->next = NULL; 
+//     return newNode; 
+// }
+
+// struct Graph* create_graph(int V) { 
+//     struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph)); 
+//     graph->V = V; 
+//     graph->array = (struct AdjList*)malloc(V * sizeof(struct AdjList)); 
+//     for (int i = 0; i < V; ++i) 
+//         graph->array[i].head = NULL; 
+//     return graph; 
+// }
+
+// void add_edge(struct Graph* graph, int src, int dest) { 
+//     struct Node* newNode = new_node(dest); 
+//     newNode->next = graph->array[src].head; 
+//     graph->array[src].head = newNode; 
+//     newNode = new_node(src); 
+//     newNode->next = graph->array[dest].head; 
+//     graph->array[dest].head = newNode; 
+// }
+
+// struct QueueNode* new_queue_node(int data) { 
+//     struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode)); 
+//     newNode->data = data; 
+//     newNode->next = NULL; 
+//     return newNode; 
+// }
+
+// struct Queue* create_queue() { 
+//     struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue)); 
+//     queue->front = queue->rear = NULL; 
+//     return queue; 
+// }
+
+// int is_empty(struct Queue* queue) { 
+//     return (queue->front == NULL); 
+// }
+
+// void enqueue(struct Queue* queue, int data) { 
+//     struct QueueNode* newNode = new_queue_node(data); 
+//     if (queue->rear == NULL) { 
+//         queue->front = queue->rear = newNode; 
+//         return; 
+//     } 
+//     queue->rear->next = newNode; 
+//     queue->rear = newNode; 
+// }
+
+// int dequeue(struct Queue* queue) { 
+//     if (queue->front == NULL) 
+//         return -1; 
+//     struct QueueNode* temp = queue->front; 
+//     int data = temp->data; 
+//     queue->front = queue->front->next; 
+//     if (queue->front == NULL) 
+//         queue->rear = NULL; 
+//     free(temp); 
+//     return data; 
+// }
+
+// void bfs(struct Graph* graph, int start) { 
+//     int* visited = (int*)calloc(graph->V, sizeof(int)); 
+//     struct Queue* queue = create_queue(); 
+//     enqueue(queue, start); 
+//     visited[start] = 1; 
+//     while (!is_empty(queue)) { 
+//         int current = dequeue(queue); 
+//         printf("%d ", current); 
+//         struct Node* temp = graph->array[current].head; 
+//         while (temp) { 
+//             if (!visited[temp->data]) { 
+//                 enqueue(queue, temp->data); 
+//                 visited[temp->data] = 1; 
+//             } 
+//             temp = temp->next; 
+//         } 
+//     } 
+//     free(visited); 
+//     free(queue); 
+// }
+
+// int main() { 
+//     int V = 4; 
+//     struct Graph* graph = create_graph(V); 
+//     add_edge(graph, 0, 1); 
+//     add_edge(graph, 0, 2); 
+//     add_edge(graph, 1, 2); 
+//     add_edge(graph, 2, 0); 
+//     add_edge(graph, 2, 3); 
+//     add_edge(graph, 3, 3); 
+//     printf("Breadth First Traversal starting from vertex 2: "); 
+//     bfs(graph, 2); 
+//     return 0; 
+// }
+
+
+______________________________________
+______________________________________________
+//dfs
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define V 4 // Number of vertices
+
+// Graph representation using adjacency matrix
+int graph[V][V] = {
+    {0, 1, 1, 0},
+    {0, 0, 1, 0},
+    {1, 0, 0, 1},
+    {0, 0, 0, 1}
+};
+
+// Array to keep track of visited vertices
+bool visited[V];
+
+// Depth First Search (DFS) function
+void DFS(int vertex) {
+    visited[vertex] = true;
+    printf("%d ", vertex);
+
+    for (int i = 0; i < V; i++) {
+        if (graph[vertex][i] && !visited[i]) {
+            DFS(i);
+        }
+    }
+}
+
+int main() {
+    // Initialize visited array
+    for (int i = 0; i < V; i++) {
+        visited[i] = false;
+    }
+
+    printf("Depth First Search starting from vertex 0:\n");
+    DFS(0); // Start DFS from vertex 0
+
+    return 0;
+}
+
+
+
+
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// struct Node { int data; struct Node* next; };
+// struct AdjList { struct Node* head; };
+// struct Graph { int V; struct AdjList* array; };
+
+// struct Node* new_node(int data);
+// struct Graph* create_graph(int V);
+// void add_edge(struct Graph* graph, int src, int dest);
+// void dfs_util(struct Graph* graph, int v, int* visited);
+// void dfs(struct Graph* graph, int start);
+// int main();
+
+// struct Node* new_node(int data) {
+//     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+//     newNode->data = data;
+//     newNode->next = NULL;
+//     return newNode;
+// }
+
+// struct Graph* create_graph(int V) {
+//     struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+//     graph->V = V;
+//     graph->array = (struct AdjList*)malloc(V * sizeof(struct AdjList));
+//     for (int i = 0; i < V; ++i)
+//         graph->array[i].head = NULL;
+//     return graph;
+// }
+
+// void add_edge(struct Graph* graph, int src, int dest) {
+//     struct Node* newNode = new_node(dest);
+//     newNode->next = graph->array[src].head;
+//     graph->array[src].head = newNode;
+//     newNode = new_node(src);
+//     newNode->next = graph->array[dest].head;
+//     graph->array[dest].head = newNode;
+// }
+
+// void dfs_util(struct Graph* graph, int v, int* visited) {
+//     visited[v] = 1;
+//     struct Node* temp = graph->array[v].head;
+//     while (temp) {
+//         if (!visited[temp->data])
+//             dfs_util(graph, temp->data, visited);
+//         temp = temp->next;
+//     }
+// }
+
+// void dfs(struct Graph* graph, int start) {
+//     int* visited = (int*)malloc(graph->V * sizeof(int));
+//     for (int i = 0; i < graph->V; ++i)
+//         visited[i] = 0;
+//     dfs_util(graph, start, visited);
+// }
+
+// int main() {
+//     int V = 4;
+//     struct Graph* graph = create_graph(V);
+//     add_edge(graph, 0, 1);
+//     add_edge(graph, 0, 2);
+//     add_edge(graph, 1, 2);
+//     add_edge(graph, 2, 0);
+//     add_edge(graph, 2, 3);
+//     add_edge(graph, 3, 3);
+//     printf("Depth First Traversal starting from vertex 2: ");
+//     dfs(graph, 2);
+//     return 0;
+// }
+
+
+__________________________________________________
+____________________________________
+//dfs bfs
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define V 6 // Number of vertices
+
+// Queue structure for BFS
+struct Queue {
+    int front, rear, size;
+    unsigned capacity;
+    int* array;
+};
+
+// Create a queue for BFS
+struct Queue* createQueue(unsigned capacity) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = capacity;
+    queue->front = queue->size = 0;
+    queue->rear = capacity - 1;
+    queue->array = (int*)malloc(queue->capacity * sizeof(int));
+    return queue;
+}
+
+// Check if queue is full
+bool isFull(struct Queue* queue) {
+    return (queue->size == queue->capacity);
+}
+
+// Check if queue is empty
+bool isEmpty(struct Queue* queue) {
+    return (queue->size == 0);
+}
+
+// Enqueue an element to the queue
+void enqueue(struct Queue* queue, int item) {
+    if (isFull(queue))
+        return;
+    queue->rear = (queue->rear + 1) % queue->capacity;
+    queue->array[queue->rear] = item;
+    queue->size = queue->size + 1;
+}
+
+// Dequeue an element from the queue
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue))
+        return -1;
+    int item = queue->array[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->size = queue->size - 1;
+    return item;
+}
+
+// Depth First Search (DFS) traversal
+void DFS(int graph[V][V], int start, bool visited[]) {
+    visited[start] = true;
+    printf("%d ", start);
+
+    for (int i = 0; i < V; i++) {
+        if (graph[start][i] && !visited[i]) {
+            DFS(graph, i, visited);
+        }
+    }
+}
+
+// Breadth First Search (BFS) traversal
+void BFS(int graph[V][V], int start) {
+    bool visited[V];
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+
+    struct Queue* queue = createQueue(V);
+    visited[start] = true;
+    enqueue(queue, start);
+
+    printf("Breadth First Traversal starting from vertex %d: ", start);
+
+    while (!isEmpty(queue)) {
+        int vertex = dequeue(queue);
+        printf("%d ", vertex);
+
+        for (int i = 0; i < V; i++) {
+            if (graph[vertex][i] && !visited[i]) {
+                visited[i] = true;
+                enqueue(queue, i);
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+int main() {
+    int graph[V][V] = {
+        {0, 1, 1, 0, 0, 0},
+        {1, 0, 0, 1, 0, 0},
+        {1, 0, 0, 1, 1, 0},
+        {0, 1, 1, 0, 1, 1},
+        {0, 0, 1, 1, 0, 1},
+        {0, 0, 0, 1, 1, 0}
+    };
+
+    int start_vertex;
+    printf("Enter the starting vertex for DFS and BFS: ");
+    scanf("%d", &start_vertex);
+
+    bool visited[V];
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+
+    printf("Depth First Traversal starting from vertex %d: ", start_vertex);
+    DFS(graph, start_vertex, visited);
+    printf("\n");
+
+    BFS(graph, start_vertex);
+
+    return 0;
+}
+
+___________________________________________
+_____________________________________
+//dijkastra
+
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX_VERTICES 100
+
+int minDistance(int dist[], int visited[], int n) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < n; v++) {
+        if (!visited[v] && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+
+    return min_index;
+}
+
+void dijkstra(int graph[MAX_VERTICES][MAX_VERTICES], int src, int n) {
+    int dist[MAX_VERTICES];
+    int visited[MAX_VERTICES];
+
+    for (int i = 0; i < n; i++) {
+        dist[i] = INT_MAX;
+        visited[i] = 0;
+    }
+
+    dist[src] = 0;
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = minDistance(dist, visited, n);
+        visited[u] = 1;
+
+        for (int v = 0; v < n; v++) {
+            if (!visited[v] && graph[u][v] && dist[u] != INT_MAX &&
+                dist[u] + graph[u][v] < dist[v]) {
+                dist[v] = dist[u] + graph[u][v];
+            }
+        }
+    }
+
+    printf("Vertex Distance from Source\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d \t\t %d\n", i, dist[i]);
+    }
+}
+
+int main() {
+    int n, graph[MAX_VERTICES][MAX_VERTICES];
+    int src;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    printf("Enter the source vertex: ");
+    scanf("%d", &src);
+
+    dijkstra(graph, src, n);
+
+    return 0;
+}
+
+_______________________________________________
+__________________________________________________
+//enode_deadnode
+
+#include <stdio.h>
+
+#define MAX_VERTICES 100
+
+// Structure to represent a graph
+struct Graph {
+    int V; // Number of vertices
+    int E; // Number of edges
+    int adj[MAX_VERTICES][MAX_VERTICES]; // Adjacency matrix
+};
+
+// Function to initialize a graph
+void initializeGraph(struct Graph* graph, int V) {
+    graph->V = V;
+    graph->E = 0;
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            graph->adj[i][j] = 0; // Initialize all entries as 0 (no edge)
+        }
+    }
+}
+
+// Function to add an edge to the graph
+void addEdge(struct Graph* graph, int u, int v) {
+    graph->adj[u][v] = 1;
+    graph->E++;
+}
+
+// Function to find live nodes, E-nodes, and dead nodes in the graph
+void findNodes(struct Graph* graph) {
+    int liveNodes = 0, eNodes = 0, deadNodes = 0;
+
+    for (int i = 0; i < graph->V; i++) {
+        int outDegree = 0, inDegree = 0;
+        for (int j = 0; j < graph->V; j++) {
+            if (graph->adj[i][j] == 1)
+                outDegree++;
+            if (graph->adj[j][i] == 1)
+                inDegree++;
+        }
+
+        if (outDegree == 0 && inDegree == 0)
+            deadNodes++;
+        else if (outDegree == 0)
+            liveNodes++;
+        else if (inDegree == 0)
+            eNodes++;
+    }
+
+    printf("Live Nodes: %d\n", liveNodes);
+    printf("E-Nodes: %d\n", eNodes);
+    printf("Dead Nodes: %d\n", deadNodes);
+}
+
+int main() {
+    int V = 5; // Number of vertices
+    struct Graph graph;
+    initializeGraph(&graph, V);
+
+    // Adding edges to the graph (Example graph)
+    addEdge(&graph, 0, 1);
+    addEdge(&graph, 1, 2);
+    addEdge(&graph, 2, 3);
+    addEdge(&graph, 3, 0);
+    addEdge(&graph, 2, 4);
+
+    findNodes(&graph);
+
+    return 0;
+}
+
+
+________________________________________________
+________________________________________________
+//graph_coloring
+
+//graph coloring 
+//2-times 
+
+// #include <stdio.h>
+// #include <stdbool.h>
+
+// #define V 4 // Number of vertices
+
+// // Function to check if the current color assignment is safe for vertex v
+// bool isSafe(int v, bool graph[V][V], int color[], int c)
+// {
+//     for (int i = 0; i < V; i++)
+//         if (graph[v][i] && c == color[i])
+//             return false;
+//     return true;
+// }
+
+// // Recursive function to solve the graph coloring problem
+// bool graphColoringUtil(bool graph[V][V], int m, int color[], int v)
+// {
+//     // Base case: if all vertices are assigned a color, return true
+//     if (v == V)
+//         return true;
+
+//     // Try different colors for vertex v
+//     for (int c = 1; c <= m; c++) {
+//         // Check if assignment of color c to v is safe
+//         if (isSafe(v, graph, color, c)) {
+//             color[v] = c;
+
+//             // Recur to assign colors to rest of the vertices
+//             if (graphColoringUtil(graph, m, color, v + 1) == true)
+//                 return true;
+
+//             // If assigning color c doesn't lead to a solution, backtrack
+//             color[v] = 0;
+//         }
+//     }
+
+//     // If no color can be assigned to this vertex, return false
+//     return false;
+// }
+
+// // Function to solve the graph coloring problem using m colors
+// void graphColoring(bool graph[V][V], int m)
+// {
+//     int color[V];
+//     for (int i = 0; i < V; i++)
+//         color[i] = 0;
+
+//     if (graphColoringUtil(graph, m, color, 0) == false) {
+//         printf("Solution does not exist\n");
+//         return;
+//     }
+
+//     // Print the solution
+//     printf("Solution exists:\n");
+//     for (int i = 0; i < V; i++)
+//         printf("Vertex %d --> Color %d\n", i, color[i]);
+// }
+
+// // Driver code
+// int main()
+// {
+//     // Example graph (adjacency matrix representation)
+//     bool graph[V][V] = {
+//         {0, 1, 1, 1},
+//         {1, 0, 1, 0},
+//         {1, 1, 0, 1},
+//         {1, 0, 1, 0}
+//     };
+//     int m = 3; // Number of colors
+
+//     graphColoring(graph, m);
+
+//     return 0;
+// }
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_VERTICES 100
+
+typedef struct Graph {
+    int numVertices;
+    bool adjMatrix[MAX_VERTICES][MAX_VERTICES];
+} Graph;
+
+int colorGraph(Graph* graph, int numColors, int colors[]) {
+    int numColored = 0;
+
+    for (int i = 0; i < graph->numVertices; i++) {
+        colors[i] = 0;
+    }
+
+    for (int i = 0; i < graph->numVertices; i++) {
+        if (colors[i] == 0) {
+            bool available[numColors];
+            for (int j = 0; j < numColors; j++) {
+                available[j] = true;
+            }
+
+            for (int j = 0; j < graph->numVertices; j++) {
+                if (graph->adjMatrix[i][j] && colors[j] != 0) {
+                    available[colors[j] - 1] = false;
+                }
+            }
+
+            int color;
+            for (color = 0; color < numColors; color++) {
+                if (available[color]) {
+                    break;
+                }
+            }
+
+            colors[i] = color + 1;
+            numColored++;
+        }
+    }
+
+    return numColored;
+}
+
+int main() {
+    Graph graph;
+    int numColors;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &graph.numVertices);
+
+    printf("Enter the number of colors: ");
+    scanf("%d", &numColors);
+
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 0; i < graph.numVertices; i++) {
+        for (int j = 0; j < graph.numVertices; j++) {
+            scanf("%d", &graph.adjMatrix[i][j]);
+        }
+    }
+
+    int colors[MAX_VERTICES];
+    int numColored = colorGraph(&graph, numColors, colors);
+
+    printf("Vertex Colors:\n");
+    for (int i = 0; i < graph.numVertices; i++) {
+        printf("Vertex %d: Color %d\n", i, colors[i]);
+    }
+
+    printf("Number of colors used: %d\n", numColored);
+
+    return 0;
+}
+
+
+__________________________________________________________________________________
+//Hamiltonian
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define V 5 // Maximum number of vertices
+
+// Function to check if vertex v can be added to the path
+bool isSafe(int v, bool graph[V][V], int path[], int pos, bool visited[]) {
+    // Check if this vertex is an adjacent vertex of the previously added vertex
+    if (!graph[path[pos - 1]][v])
+        return false;
+
+    // Check if the vertex has been visited before
+    if (visited[v])
+        return false;
+
+    return true;
+}
+
+// Recursive function to find Hamiltonian cycle starting from vertex v
+bool hamCycleUtil(bool graph[V][V], int path[], int pos, bool visited[]) {
+    // Base case: if all vertices are included in the path
+    if (pos == V) {
+        // Check if there is an edge from the last vertex to the starting vertex
+        if (graph[path[pos - 1]][path[0]])
+            return true;
+        else
+            return false;
+    }
+
+    // Try different vertices as the next candidate in Hamiltonian Cycle
+    for (int v = 1; v < V; v++) {
+        if (isSafe(v, graph, path, pos, visited)) {
+            path[pos] = v;
+            visited[v] = true;
+
+            if (hamCycleUtil(graph, path, pos + 1, visited))
+                return true;
+
+            // If adding vertex v doesn't lead to a solution, backtrack
+            visited[v] = false;
+        }
+    }
+
+    return false;
+}
+
+// Function to find Hamiltonian cycle in a graph
+bool hamCycle(bool graph[V][V]) {
+    int path[V]; // To store the Hamiltonian cycle
+    bool visited[V]; // To keep track of visited vertices
+
+    // Initialize all vertices as not visited
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+
+    // Hamiltonian cycle always starts with vertex 0
+    path[0] = 0;
+    visited[0] = true;
+
+    // If there is no Hamiltonian cycle, return false
+    if (hamCycleUtil(graph, path, 1, visited) == false) {
+        printf("No Hamiltonian cycle exists\n");
+        return false;
+    }
+
+    // Print Hamiltonian cycle
+    printf("Hamiltonian cycle exists: ");
+    for (int i = 0; i < V; i++)
+        printf("%d ", path[i]);
+    printf("%d\n", path[0]);
+
+    return true;
+}
+
+// Driver code
+int main() {
+    bool graph[V][V] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 1, 1},
+        {0, 1, 0, 0, 1},
+        {1, 1, 0, 0, 1},
+        {0, 1, 1, 1, 0}
+    };
+
+    hamCycle(graph);
+
+    return 0;
+}
+
+
+____________________________________________
+________________________________________
+//heap sort
+
+// Heap Sort in C
+    #include <stdio.h>
+    // Function to swap the the position of two elements
+  void swap(int *a, int *b) 
+{
+int temp = *a;
+    *a = *b;
+    *b = temp;
+  }
+    void heapify(int arr[], int n, int i)
+ {
+    // Find largest among root, left child and right child
+int largest = i;
+int left = 2 * i + 1;
+int right = 2 * i + 2;
+
+    if (left < n &&arr[left] >arr[largest])
+      largest = left;
+      if (right < n &&arr[right] >arr[largest])
+      largest = right;
+      // Swap and continue heapifying if root is not largest
+    if (largest != i)
+ {
+      swap(&arr[i], &arr[largest]);
+heapify(arr, n, largest);
+    }
+  }
+  // Main function to do heap sort
+  void heapSort(int arr[], int n) {
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+heapify(arr, n, i);
+
+
+    // Heap sort
+    for (int i = n - 1; i >= 0; i--) {
+      swap(&arr[0], &arr[i]);
+
+      // Heapify root element to get highest element at root again
+heapify(arr, i, 0);
+    }
+  }
+
+  // Print an array
+  void printArray(int arr[], int n) {
+    for (int i = 0; i < n; ++i)
+printf("%d ", arr[i]);
+printf("\n");
+  }
+
+int main()
+ {
+int arr[] = {1, 12, 9, 5, 6, 10};
+int n = sizeof(arr) / sizeof(arr[0]);
+
+heapSort(arr, n);
+
+printf("Sorted array is \n");
+printArray(arr, n);
+  }
+
+// Output :
+// Sorted array is 
+// 1 5 6 9 10 12
+
+
+___________________________________________
+__________________________________________
+//insertion sort
+
+//Insertion sort
+#include <stdio.h>
+
+void insertionSort(int arr[], int n) {
+int i, key, j;
+for (i = 1; i < n; i++) {
+key = arr[i];
+j = i - 1;
+
+
+while (j >= 0 && arr[j] > key) {
+  arr[j + 1] = arr[j];
+  j = j - 1;
+}
+arr[j + 1] = key;
+}
+}
+
+int main() {
+int arr[] = {5, 2, 4, 6, 1, 3};
+ int n = sizeof(arr) / sizeof(arr[0]); 
+//sizeof(arr) returns the total size of the array arr in bytes.
+// sizeof(arr[0]) returns the size of the first element of the array arr.
+
+insertionSort(arr, n);
+
+printf("Sorted array by using insertion sort :");
+for (int i=0; i < n; i++) {
+printf("%d ", arr[i]);
+}
+
+return 0;
+}
+
+
+______________________________________
+______________________________________________
+//knapsack_greedy
+
+#include <stdio.h>
+
+// Structure to represent each item
+struct Item {
+    int profit;
+    int weight;
+    double ratio; // Value/weight ratio
+};
+
+// Function to solve the Knapsack problem using Greedy approach
+double knapsackGreedy(int W, struct Item arr[], int n) {
+    // Calculate profit/weight ratio for each item
+    for (int i = 0; i < n; i++) {
+        arr[i].ratio = (double)arr[i].profit / arr[i].weight;
+    }
+
+    // Sort items by profit/weight ratio in non-ascending order
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (arr[i].ratio < arr[j].ratio) {
+                struct Item 
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+
+    double totalProfit = 0.0;
+    int currentWeight = 0;
+
+    // Fill knapsack with items until it's full
+    for (int i = 0; i < n; i++) {
+        if (currentWeight + arr[i].weight <= W) 
+        {
+            currentWeight += arr[i].weight;
+            totalProfit += arr[i].profit;
+        } else {
+            int remainingWeight = W - currentWeight;
+            totalProfit += (double)remainingWeight * arr[i].ratio;
+            break;
+        }
+    }
+
+    return totalProfit;
+}
+
+int main() {
+    int n, W;
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    struct Item arr[n];
+
+    printf("Enter the weight and profit of each item:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Item %d: ", i + 1);
+        scanf("%d %d", &arr[i].weight, &arr[i].profit);
+    }
+
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%d", &W);
+
+    double totalProfit = knapsackGreedy(W, arr, n);
+    printf("Maximum value in knapsack: %.2f\n", totalProfit);
+
+    return 0;
+}
+
+
+____________________________________
+________________________________
+//knapsack 
+
+#include<stdio.h>
+float knapsack(int n,float weight1[],float profit1[],float capacity)
+{
+   float x[20],tp=0;
+   int i,j,u;
+   u=capacity;
+   for(i=0;i<n;i++)
+        x[i]=0.0;
+   for(i=0;i<n;i++)
+   {
+       if(weight1[i]>u)
+           break;
+       else
+       {
+            x[i]=1.0;
+            tp=tp+profit1[i];// total profit (Pi * Xi)
+            u=u-weight1[i];
+       }
+    }
+    if(i<n)
+        x[i]=u/weight1[i];
+        tp=tp+(x[i]*profit1[i]);       
+        printf("\n The result vector is ");
+        for(i=0;i<n;i++)
+             printf("%f\t",x[i]);
+        printf("\n maximum profit is :- %f\n\n",tp);
+  return tp;
+}
+void main()
+{
+   float weight[20],profit[20],capacity,weight1[20];
+   float profit1[20],optimal_sol,ans1,ans2,ans3;
+   int n,i,j,num;
+   float ratio[20],temp;
+   printf("\n Enter the no of object");
+   scanf("%d",&n);
+   
+   printf("\n Enter the weight of object");
+   for(i=0;i<n;i++)
+   {
+   scanf("%f",&weight[i]);
+   }
+   
+   printf("\n Enter the profit of each object: ");
+   for(i=0;i<n;i++)
+   {
+      scanf("%f",&profit[i]);
+   }
+   
+   printf("\n Enter the capacity of knapsack: ");
+   scanf("%f",&capacity);
+   for(i=0;i<n;i++)
+   {
+      profit1[i]=profit[i];
+      weight1[i]=weight[i];
+   }
+   //method 1  =  non decrasing order of weight
+   for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(weight1[i]>weight1[j])
+          {
+               temp=weight1[j];
+               weight1[j]=weight1[i];
+               weight1[i]=temp;
+               
+               temp=profit1[j];
+               profit1[j]=profit1[i];
+               profit1[i]=temp;
+          }
+      }
+   }
+   printf("\n non decrasing order of weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",weight1[i]);
+   }
+   printf("\n profit as per weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",profit1[i]);
+   }
+   ans1=knapsack(n,weight1,profit1,capacity);
+   
+   
+   
+//method 2:  non increasing order of profit
+
+printf("\n non increasing order of profit:");
+
+for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(profit1[i]<profit1[j])
+          {
+               temp=profit1[j];
+               profit1[j]=profit1[i];
+               profit1[i]=temp;
+               
+               temp=weight1[j];
+               weight1[j]=weight1[i];
+               weight1[i]=temp;
+          }
+      }
+   }
+  // printf("\n non decrasing order of weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",weight1[i]);
+   }
+   printf("\n weight as per profit:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",profit1[i]);
+   }
+   ans2=knapsack(n,weight1,profit1,capacity);
+   
+//method 3 =non decrasing order of ratio of(profit and weight
+
+for(i=0;i<n;i++)
+{
+   ratio[i]=profit[i]/weight[i];
+}
+
+for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(ratio[i]<ratio[j])
+          {
+               temp=ratio[j];
+               ratio[j]=ratio[i];
+               ratio[i]=temp;
+               
+               temp=weight[j];
+               weight[j]=weight[i];
+               weight[i]=temp;
+               
+               temp=profit[j];
+               profit[j]=profit[i];
+               profit[i]=temp;
+               
+          }
+      }
+   }
+   printf("\n non decrasing order of ratio of(profit and weight):");
+   for(i=0;i<n;i++)
+      printf("%f\t",ratio[i]);
+
+      for(i=0;i<n;i++)
+   {
+      printf("%f\t",weight1[i]);
+   }
+   printf("\n profit as per weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",profit1[i]);
+   }
+   ans3=knapsack(n,weight,profit,capacity);
+   
+   if(ans1>= ans2 && ans1>=ans3)
+       optimal_sol=ans1;
+   else if(ans2>= ans1 && ans2>=ans3)
+        optimal_sol=ans2;
+   else
+       optimal_sol=ans3;     
+        
+   printf("\n optimal solution=%f",optimal_sol);
+}
+         
+          
+______________________________
+______________________________________
+//knapsack 0-1
+
+#include<stdio.h>
+float knapsack(int n,float weight1[],float profit1[],float capacity)
+{
+   float x[20],tp=0;
+   int i,j,u;
+   u=capacity;
+   for(i=0;i<n;i++)
+        x[i]=0.0;
+   for(i=0;i<n;i++)
+   {
+       if(weight1[i]>u)
+        x[i]=0.0;
+       else
+       {
+            x[i]=1.0;
+            tp=tp+profit1[i]; //total profit (Pi * Xi)
+            u=u-weight1[i];
+       }
+    }
+    // if(i<n)
+       // x[i]=u/weight1[i];
+        tp=tp+(x[i]*profit1[i]);
+        printf("\n The result vector is ");
+        for(i=0;i<n;i++)
+             printf("%f\t",x[i]);
+        printf("\n maximum profit is :- %f\n\n",tp);
+  return tp;
+}
+void main()
+{
+   float weight[20],profit[20],capacity,weight1[20];
+   float profit1[20],optimal_sol,ans1,ans2,ans3;
+   int n,i,j,num;
+   float ratio[20],temp;
+   printf("\n Enter the no of object");
+   scanf("%d",&n);
+   
+   printf("\n Enter the weight of object");
+   for(i=0;i<n;i++)
+   {
+   scanf("%f",&weight[i]);
+   }
+   
+   printf("\n Enter the profit of each object: ");
+   for(i=0;i<n;i++)
+   {
+      scanf("%f",&profit[i]);
+   }
+   
+   printf("\n Enter the capacity of knapsack: ");
+   scanf("%f",&capacity);
+   for(i=0;i<n;i++)
+   {
+      profit1[i]=profit[i];
+      weight1[i]=weight[i];
+   }
+   for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(weight1[i]>weight1[j])
+          {
+               temp=weight1[j];
+               weight1[j]=weight1[i];
+               weight1[i]=temp;
+               
+               temp=profit1[j];
+               profit1[j]=profit1[i];
+               profit1[i]=temp;
+          }
+      }
+   }
+   printf("\n non decrasing order of weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",weight1[i]);
+   }
+   printf("\n profit as per weight:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",profit1[i]);
+   }
+   ans1=knapsack(n,weight1,profit1,capacity);
+   
+   
+   
+//method 2:
+
+printf("\n non increasing order of profit:");
+
+for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(profit1[i]<profit1[j])
+          {
+               temp=profit1[j];
+               profit1[j]=profit1[i];
+               profit1[i]=temp;
+               
+               temp=weight1[j];
+               weight1[j]=weight1[i];
+               weight1[i]=temp;
+          }
+      }
+   }
+  // printf("\n non decrasing order of weitght:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",weight1[i]);
+   }
+   printf("\n weight as per profit:");
+   for(i=0;i<n;i++)
+   {
+      printf("%f\t",profit1[i]);
+   }
+   ans2=knapsack(n,weight1,profit1,capacity);
+   
+//method 3
+
+for(i=0;i<n;i++)
+{
+   ratio[i]=profit[i]/weight[i];
+}
+
+for(i=0;i<n;i++)
+   {
+       for(j=i+1;j<n;j++)
+       {
+          if(ratio[i]<ratio[j])
+          {
+               temp=ratio[j];
+               ratio[j]=ratio[i];
+               ratio[i]=temp;
+               
+               temp=weight[j];
+               weight[j]=weight[i];
+               weight[i]=temp;
+               
+               temp=profit[j];
+               profit[j]=profit[i];
+               profit[i]=temp;
+               
+          }
+      }
+   }
+   printf("\n non decrasing order of ratio of(profit and weight):");
+   for(i=0;i<n;i++)
+      printf("%f\t",ratio[i]);
+   ans3=knapsack(n,weight,profit,capacity);
+   
+   if(ans1>= ans2 && ans1>=ans3)
+       optimal_sol=ans1;
+   else if(ans2>= ans1 && ans2>=ans3)
+        optimal_sol=ans2;
+   else
+       optimal_sol=ans3;     
+        
+   printf("\n optimal solution=%f",optimal_sol);
+}
+         
+
+__________________________________________
+____________________________________
+//knapsack LCBB
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_ITEMS 100 // Maximum number of items
+#define MAX_WEIGHT 1000 // Maximum weight capacity of knapsack
+
+// Structure to represent an item
+struct Item {
+    int weight;
+    int value;
+};
+
+// Function to compare two items based on their value per unit weight
+int compare(const void* a, const void* b) {
+    double ratio1 = ((double)((struct Item*)b)->value / ((struct Item*)b)->weight);
+    double ratio2 = ((double)((struct Item*)a)->value / ((struct Item*)a)->weight);
+    return ratio1 - ratio2;
+}
+
+// LCBB function to find the optimal solution for 0/1 knapsack problem
+void LCBB(struct Item items[], int n, int capacity) {
+    // Sort items based on value per unit weight (decreasing order)
+    qsort(items, n, sizeof(struct Item), compare);
+
+    // Initialize variables for tracking best solution
+    int totalWeight = 0;
+    int totalValue = 0;
+
+    // Initialize variables for branch and bound algorithm
+    int currentWeight = 0;
+    int currentValue = 0;
+    int level = 0;
+
+    // Array to store if item is included or not (1 for included, 0 for not included)
+    int solution[MAX_ITEMS];
+
+    // Initialize solution array
+    for (int i = 0; i < n; i++) {
+        solution[i] = 0;
+    }
+
+    // Loop to perform branch and bound
+    while (level != -1) {
+        // Check if we reached leaf node
+        if (level == n) {
+            if (currentValue > totalValue) {
+                totalValue = currentValue;
+                totalWeight = currentWeight;
+                for (int i = 0; i < n; i++) {
+                    solution[i] = items[i].weight;
+                }
+            }
+            level--;
+            continue;
+        }
+
+        // Check if item can be included
+        if (currentWeight + items[level].weight <= capacity) {
+            currentWeight += items[level].weight;
+            currentValue += items[level].value;
+        } else {
+            level--;
+        }
+
+        // Calculate upper bound
+        double bound = currentValue;
+        int remainingWeight = capacity - currentWeight;
+        int j = level + 1;
+        while (remainingWeight > 0 && j < n) {
+            if (items[j].weight <= remainingWeight) {
+                bound += items[j].value;
+                remainingWeight -= items[j].weight;
+            } else {
+                bound += items[j].value * ((double)remainingWeight / items[j].weight);
+                remainingWeight = 0;
+            }
+            j++;
+        }
+
+        // If upper bound is less than best solution so far, backtrack
+        if (bound <= totalValue) {
+            level--;
+            continue;
+        }
+
+        // Move to next level
+        level++;
+    }
+
+    // Print the best solution found
+    printf("Optimal solution: Total value = %d, Total weight = %d\n", totalValue, totalWeight);
+    printf("Items included:\n");
+    for (int i = 0; i < n; i++) {
+        if (solution[i] != 0) {
+            printf("Item %d: Weight = %d, Value = %d\n", i+1, items[i].weight, items[i].value);
+        }
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    struct Item items[MAX_ITEMS];
+
+    printf("Enter the weight and value of each item:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Item %d: ", i+1);
+        scanf("%d %d", &items[i].weight, &items[i].value);
+    }
+
+    int capacity;
+    printf("Enter the capacity of the knapsack: ");
+    scanf("%d", &capacity);
+
+    LCBB(items, n, capacity);
+
+    return 0;
+}
+
+__________________________________
+_________________________________
+//kruskals
+
+
+# include<stdio.h>
+# include<stdlib.h>
+
+int i,j,k,a,b,u,v,n,ne=1;
+
+int min,mincost=0,cost[9][9],parent[9];
+ int find(int);
+ int uni(int,int);
+ void main()
+ {
+  printf("Kruskals algorithm  \n");
+  printf("----------------------------\n");
+  printf("Enter the no of vertices:\n");
+  scanf("%d",&n);
+
+  printf("Enter the no of Edges:\n");
+  scanf("%d",&ne);
+ 
+  printf("Enter the cost adjancy matrix:\n");
+  for(i=1;i<=n;i++)
+  {
+  for(j=1;j<=n;j++)
+  {
+  scanf("%d",&cost[i][j]);
+  if(cost[i][j]==0)
+  cost[i][j]=999;
+  }
+  }
+  printf("The edges of minimum cost spanning tree are\n");
+  while(ne<n)
+  {
+  for(i=1,min=999;i<=n;i++)
+  {
+  for(j=1;j<=n;j++)
+  {
+  if(cost[i][j]<min)
+  {
+  min=cost[i][j];
+  a=u=j;
+  b=v=j;
+  }
+  }
+  }
+  u=find(u);
+  v=find(v);
+ 
+  if(uni(u,v))
+  {
+  printf("%d edge(%d,%d)=%d\n",ne++,a,b,min);
+  mincost +=min;
+  }
+  cost[a][b]=cost[b][a]=999;
+  }
+  printf("\n Minimum cost=%d\n",mincost);
+ }
+ int find(int i)
+ {
+  while(parent[i])
+  i=parent[i];
+  return i;
+ }
+ 
+ int uni(int i,int j)
+ {
+  if(i!=j)
+  {
+  parent[j]=i;
+  return 1;
+  }
+  return 0;
+ }
+
+__________________________________
+__________________________________________
+//lcs
+
+// SLIP 6  (LCS)
+#include <stdio.h>
+#include <string.h>
+// Function to find the length of the longest common subsequence
+int lcsLength(char *X, char *Y)
+ {
+int m = strlen(X);
+int n = strlen(Y);
+int L[m + 1][n + 1];
+int i, j;
+
+    // Building the L[m+1][n+1] table in a bottom-up manner
+    for (i = 0; i <= m; i++)
+ {
+        for (j = 0; j <= n; j++)
+ {
+            if (i == 0 || j == 0)
+                L[i][j] = 0;
+            else if (X[i - 1] == Y[j - 1])
+                L[i][j] = L[i - 1][j - 1] + 1;
+            else
+                L[i][j] = (L[i - 1][j] > L[i][j - 1]) ? L[i - 1][j] : L[i][j - 1];
+        }
+    }
+    return L[m][n];
+}
+int main() {
+    char X[] = "GOLDEN";
+    char Y[] = "ELDER";
+printf("Length of LCS is %d\n", lcsLength(X, Y));
+    return 0;
+}
+
+// Output :  Length of LCS is 3
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Function to find the longest common subsequence
+void longestCommonSubsequence(char *X, char *Y, int m, int n) {
+int **L = (int **)malloc(sizeof(int *) * (m + 1));
+    for (int i = 0; i < m + 1; i++) {
+        L[i] = (int *)malloc(sizeof(int) * (n + 1));
+    }
+
+    // Build L[m+1][n+1] in bottom-up fashion
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == 0 || j == 0) {
+                L[i][j] = 0;
+            } else if (X[i - 1] == Y[j - 1]) {
+                L[i][j] = L[i - 1][j - 1] + 1;
+            } else {
+                L[i][j] = (L[i - 1][j] > L[i][j - 1]) ? L[i - 1][j] : L[i][j - 1];
+            }
+        }
+    }
+
+    // Find the longest common subsequence
+int index = L[m][n];
+    char lcs[index + 1];
+lcs[index] = '\0'; // Set the terminating character
+
+    // Start from the right-most bottom-most corner and
+    // one by one store characters in lcs[]
+int i = m, j = n;
+    while (i > 0 && j > 0) {
+        // If current character in X[] and Y[] are same, then
+        // current character is part of LCS
+        if (X[i - 1] == Y[j - 1]) {
+lcs[index - 1] = X[i - 1]; // Put current character in result
+            i--;
+            j--;
+            index--; // Reduce values of i, j and index
+        } else if (L[i - 1][j] > L[i][j - 1]) {
+            i--;
+        } else {
+            j--;
+        }
+    }
+
+    // Print one of the longest common subsequences
+printf("One of the Longest Common Subsequences: %s\n", lcs);
+
+    // Free dynamically allocated memory
+    for (int i = 0; i < m + 1; i++) {
+        free(L[i]);
+    }
+    free(L);
+}
+
+// Driver program to test above functions
+int main() {
+    char X[] = "golden";
+    char Y[] = "elder";
+
+int m = strlen(X);
+int n = strlen(Y);
+
+longestCommonSubsequence(X, Y, m, n);
+    return 0;
+}
+// Output : 
+// One of the Longest Common Subsequences: lde
+
+
+_________________________________________________
+_______________________________________________________
+//merge sort
+
+ #include <stdio.h>
+
+// Merge two subarrays of arr[]
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+void merge(int arr[], int l, int m, int r) {
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    // Create temporary arrays
+    int L[n1], R[n2];
+
+    // Copy data to temporary arrays L[] and R[]
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    // Merge the temporary arrays back into arr[l..r]
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[], if any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of R[], if any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// l is for left index and r is right index of the sub-array of arr to be sorted
+void mergeSort(int arr[], int l, int r) {
+    if (l < r) {
+        // Same as (l+r)/2, but avoids overflow for large l and h
+        int m = l + (r - l) / 2;
+
+        // Sort first and second halves
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+
+        // Merge the sorted halves
+        merge(arr, l, m, r);
+    }
+}
+
+// Function to print an array
+void printArray(int A[], int size) {
+    int i;
+    for (i = 0; i < size; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+
+// Driver program to test above functions
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int arr_size = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Given array is \n");
+    printArray(arr, arr_size);
+
+    mergeSort(arr, 0, arr_size - 1);
+
+    printf("\nSorted array is \n");
+    printArray(arr, arr_size);
+    return 0;
+}
+
+________________________________________
+_________________________________________   
+//MST
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+
+// Number of vertices in the graph
+#define V 5
+
+// Function to find the vertex with minimum key value, from the set of vertices not yet included in MST
+int minKey(int key[], bool mstSet[]) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < V; v++)
+        if (mstSet[v] == false && key[v] < min)
+            min = key[v], min_index = v;
+
+    return min_index;
+}
+
+// Function to print the constructed MST stored in parent[]
+void printMST(int parent[], int graph[V][V]) {
+    printf("Edge \tWeight\n");
+    for (int i = 1; i < V; i++)
+        printf("%d - %d \t%d \n", parent[i], i, graph[i][parent[i]]);
+}
+
+// Function to construct and print MST for a graph represented using adjacency matrix representation
+void primMST(int graph[V][V]) {
+    int parent[V]; // Array to store constructed MST
+    int key[V];    // Key values used to pick minimum weight edge in cut
+    bool mstSet[V]; // To represent set of vertices not yet included in MST
+
+    // Initialize all keys as INFINITE
+    for (int i = 0; i < V; i++)
+        key[i] = INT_MAX, mstSet[i] = false;
+
+    // Always include first  vertex in MST.
+    key[0] = 0; // Make key 0 so that this vertex is picked as first vertex
+    parent[0] = -1; // First node is always root of MST
+
+    // The MST will have V vertices
+    for (int count = 0; count < V - 1; count++) {
+        // Pick the minimum key vertex from the set of vertices not yet included in MST
+        int u = minKey(key, mstSet);
+
+        // Add the picked vertex to the MST set
+        mstSet[u] = true;
+
+        // Update key value and parent index of the adjacent vertices of the picked vertex
+        // Consider only those vertices which are not yet included in MST
+        for (int v = 0; v < V; v++)
+            if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v])
+                parent[v] = u, key[v] = graph[u][v];
+    }
+
+    // Print the constructed MST
+    printMST(parent, graph);
+}
+
+int main() {
+    /* Let us create the following graph
+            2    3
+        (0)--(1)--(2)
+        |   / \   |
+        6| 8/   \5 |7
+        | /     \ |
+        (3)-------(4)
+                9         */
+    int graph[V][V] = {{0, 2, 0, 6, 0},
+                       {2, 0, 3, 8, 5},
+                       {0, 3, 0, 0, 7},
+                       {6, 8, 0, 0, 9},
+                       {0, 5, 7, 9, 0}};
+
+    // Print the solution
+    primMST(graph);
+
+    return 0;
+}
+
+__________________________________________
+_________________________________________
+//nqueen
+
+/* solve N Queen Problem using backtracking */
+#define N 4
+#include <stdbool.h>
+#include <stdio.h>
+
+/* A utility function to print solution */
+void printSolution(int board[N][N])
+{
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)
+			printf(" %d ", board[i][j]);
+		printf("\n");
+	}
+}
+bool isSafe(int board[N][N], int row, int col)
+{
+	int i, j;
+
+	/* Check this row on left side */
+	for (i = 0; i < col; i++)
+		if (board[row][i])
+			return false;
+	/* Check upper diagonal on left side */
+	for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+		if (board[i][j])
+			return false;
+	/* Check lower diagonal on left side */
+	for (i = row, j = col; j >= 0 && i < N; i++, j--)
+		if (board[i][j])
+			return false;
+	return true;
+}
+
+bool solveNQUtil(int board[N][N], int col)
+{
+	if (col >= N)
+		return true;
+
+	for (int i = 0; i < N; i++) {
+		if (isSafe(board, i, col)) {
+			board[i][col] = 1;
+
+			if (solveNQUtil(board, col + 1))
+				return true;
+
+			board[i][col] = 0; // BACKTRACK
+		}
+	}
+
+	
+	return false;
+}
+bool solveNQ()
+{
+	int board[N][N] = { { 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 },
+						{ 0, 0, 0, 0 } };
+	if (solveNQUtil(board, 0) == false) {
+		printf("Solution does not exist");
+		return false;
+	}
+
+	printSolution(board);
+	return true;
+}
+
+// driver program to test above function
+int main()
+{
+	solveNQ();
+	return 0;
+}
+// Output : 
+
+// 0  0  1  0 
+//  1  0  0  0 
+//  0  0  0  1 
+// 0 1 0 0
+
+
+____________________________________________
+______________________________________________
+//prims
+
+//prims 
+//2-times 
+
+#include<stdio.h>
+#include<stdlib.h>
+#define infinity 9999
+#define MAX 20
+
+int G[MAX][MAX],spanning[MAX][MAX],n;
+int prims();
+
+int main()
+{
+int i,j,total_cost;
+printf("Enter the no of vertices:");
+scanf("%d",&n);
+
+printf("Enter the adjency matrix:\n");
+for(i=0;i<n;i++)
+for(j=0;j<n;j++)
+scanf("%d",&G[i][j]);
+
+total_cost=prims();
+printf("\n Spanning tree matrix:\n");
+
+for(i=0;i<n;i++)
+{
+printf("\n");
+for(j=0;j<n;j++)
+printf("%d\t",spanning[i][j]);
+}
+printf("\n\n Total cost of spanning tree=%d",total_cost);
+return 0;
+}
+
+int prims()
+{
+int cost[MAX][MAX];
+int u,v,min_distance,distance[MAX],from[MAX];
+int visited[MAX],no_of_edges,i,min_cost,j;
+
+for(i=0;i<n;i++)
+for(j=0;j<n;j++)
+{
+if(G[i][j]==0)
+cost[i][j]==infinity;
+else
+cost[i][j]=G[i][j];
+spanning[i][j]=0;
+}
+distance[0]=0;
+visited[0]=1;
+
+for(i=1;i<n;i++)
+{
+distance[i]=cost[0][i];
+from[i]=0;
+visited[i]=0;
+}
+
+min_cost=0;
+no_of_edges=n-1;
+
+while(no_of_edges>0)
+{
+min_distance=infinity;
+for(i=1;i<n;i++)
+if(visited[i]==0 && distance[i]<min_distance)
+{
+v=i;
+min_distance=distance[i];
+}
+
+u=from[v];
+
+spanning[u][v]=distance[v];
+spanning[v][u]=distance[v];
+no_of_edges--;
+visited[v]=1;
+
+for(i=1;i<n;i++)
+if(visited[i]==0 && cost[i][v]<distance[i])
+{
+distance[i]=cost[i][v];
+from[i]=v;
+}
+
+min_cost=min_cost + cost[u][v];
+}
+return(min_cost);
+
+}
+
+____________________________________________
+________________________________________
+//quick sort
+          
+          
+ //quick sort
+//2-times 
+
+#include <stdio.h>
+
+// Function to swap two elements
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to partition the array and return the pivot index
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];  // Pivot element (last element of the array)
+    int i = (low - 1);      // Index of smaller element
+
+    for (int j = low; j <= high - 1; j++) {
+        // If current element is smaller than or equal to pivot
+        if (arr[j] <= pivot) {
+            i++;  // Increment index of smaller element
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+// Function to implement Quick Sort
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        // pi is partitioning index, arr[pi] is now at right place
+        int pi = partition(arr, low, high);
+
+        // Separately sort elements before partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Function to print an array
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+// Driver program to test above functions
+int main() {
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    printf("Original array: \n");
+    printArray(arr, n);
+    quickSort(arr, 0, n - 1);
+    printf("Sorted array: \n");
+    printArray(arr, n);
+    return 0;
+}
+
+_______________________________________
+____________________________
+//selection sort
+
+ //selection sort 
+//2 - times 
+
+#include <stdio.h>
+
+void selectionSort(int arr[], int n) {
+int i, j, min_idx;
+
+for (i = 0; i < n-1; i++) {
+min_idx = i;
+for (j = i+1; j < n; j++) {
+if (arr[j] < arr[min_idx]) {
+min_idx = j;
+}
+}
+int temp = arr[min_idx];
+arr[min_idx] = arr[i];
+arr[i] = temp;
+}
+}
+
+int main() {
+int n;
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+    int arr[n];
+    printf("Enter %d integers: ", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+    selectionSort(arr, n);
+
+for(int i=0; i<n; i++){
+printf("%d ", arr[i]);
+}
+
+return 0;
+}
+
+
+//or
+
+// int main() {
+
+// int arr[] = {64, 25, 12, 22, 11};
+// int n = sizeof(arr) / sizeof(arr[0]);
+
+// selectionSort(arr, n);
+
+// for(int i=0; i<n; i++){
+// printf("%d ", arr[i]);
+// }
+
+// return 0;
+// }
+
+_______________________________________
+___________________________________________
+//strassens
+
+#include <stdio.h>
+
+int main() {
+    int A[2][2], B[2][2], C[2][2],i,j;
+    int p1,p2,p3,p4,p5,p6,p7;
+
+    printf("Enter the elements of matrix A (2x2):\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            scanf("%d", &A[i][j]);
+        }
+    }
+
+    printf("Enter the elements of matrix B (2x2):\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            scanf("%d", &B[i][j]);
+        }
+    }
+
+     p1 = (A[0][0] + A[1][1]) * (B[0][0] + B[1][1]);
+     p2 = (A[1][0] + A[1][1]) * B[0][0];
+     p3 = A[0][0] * (B[0][1] - B[1][1]);
+     p4 = A[1][1] * (B[1][0] - B[0][0]);
+     p5 = (A[0][0] + A[0][1]) * B[1][1];
+     p6 = (A[1][0] - A[0][0]) * (B[0][0] + B[0][1]);
+     p7 = (A[0][1] - A[1][1]) * (B[1][0] + B[1][1]);
+
+    // Calculate result matrix
+    C[0][0] = p1 + p4 - p5 + p7;
+    C[0][1] = p3 + p5;
+    C[1][0] = p2 + p4;
+    C[1][1] = p1 - p2 + p3 + p6;
+
+    printf("\n p1 = %d", p1);
+    printf("\n p2 = %d", p2);
+    printf("\n p3 = %d", p3);
+    printf("\n p4 = %d", p4);
+    printf("\n p5 = %d", p5);
+    printf("\n p6 = %d", p6);
+    printf("\n p7 = %d", p7);
+    
+
+    printf(" matrix A (2x2):\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            printf("%d", A[i][j]);
+            printf("\n");
+        }
+    }
+
+    printf(" matrix B (2x2):\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            printf("%d", B[i][j]);
+            printf("\n");
+        }
+    }
+
+    printf(" matrix C(2x2):\n");
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            printf("%d", C[i][j]);
+            printf("\n");
+        }
+    }
+    
+
+    return 0;
+}
+
+
+
+    _____________________________
+____________________________________
+//topological
+
+ #include <stdio.h>
+#include <stdlib.h>
+#define MAX_VERTICES 100
+
+typedef struct {
+    int data;
+    int visited;
+    int inDegree;
+} Vertex;
+
+typedef struct {
+    int numVertices;
+    Vertex vertices[MAX_VERTICES];
+    int adjMatrix[MAX_VERTICES][MAX_VERTICES];
+} Graph;
+
+void initializeGraph(Graph* graph, int numVertices) {
+    graph->numVertices = numVertices;
+
+    for (int i = 0; i < numVertices; i++) {
+        graph->vertices[i].data = i;
+        graph->vertices[i].visited = 0;
+        graph->vertices[i].inDegree = 0;
+    }
+}
+
+void addEdge(Graph* graph, int src, int dest) {
+    graph->adjMatrix[src][dest] = 1;
+    graph->vertices[dest].inDegree++;
+}
+
+void topologicalSort(Graph* graph) {
+    int queue[MAX_VERTICES];
+    int front = 0, rear = 0;
+
+    for (int i = 0; i < graph->numVertices; i++) {
+        if (graph->vertices[i].inDegree == 0) {
+            queue[rear++] = i;
+        }
+    }
+
+    while (front != rear) {
+        int u = queue[front++];
+        printf("%d ", graph->vertices[u].data);
+        graph->vertices[u].visited = 1;
+
+        for (int v = 0; v < graph->numVertices; v++) {
+            if (graph->adjMatrix[u][v] && !graph->vertices[v].visited) {
+                graph->vertices[v].inDegree--;
+                if (graph->vertices[v].inDegree == 0) {
+                    queue[rear++] = v;
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    Graph graph;
+    int numVertices;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &numVertices);
+
+    initializeGraph(&graph, numVertices);
+
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            scanf("%d", &graph.adjMatrix[i][j]);
+            if (graph.adjMatrix[i][j])
+                addEdge(&graph, i, j);
+        }
+    }
+
+    printf("Topological sorting order: ");
+    topologicalSort(&graph);
+    printf("\n");
+
+    return 0;
+}
+
+____________________________________
+______________________________________
+//tsp
+
+ // Slip 8   (TSP)
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+#define N 4 // Number of cities
+
+int graph[N][N] =
+{
+    {0, 10, 15, 20},
+    {10, 0, 35, 25},
+    {15, 35, 0, 30},
+    {20, 25, 30, 0}
+};
+
+int visited[N] = {0}; // Array to keep track of visited cities
+
+int min(int x, int y)
+ {
+    return (x < y) ? x : y;
+}
+
+int nearestNeighbor() {
+int tour[N]; // Array to store the tour
+int start = 0; // Start from city 0
+    tour[0] = start;
+    visited[start] = 1;
+
+int totalCost = 0;
+
+    for (int i = 1; i < N; i++) {
+int nearest = -1;
+int minDist = INT_MAX;
+
+        // Find the nearest unvisited city
+        for (int j = 0; j < N; j++) {
+            if (!visited[j] && graph[start][j] <minDist) {
+minDist = graph[start][j];
+                nearest = j;
+            }
+        }
+
+        tour[i] = nearest;
+        visited[nearest] = 1;
+totalCost += minDist;
+        start = nearest;
+    }
+
+    // Add the cost to return to the origin city
+totalCost += graph[tour[N - 1]][0];
+
+    // Print the tour
+printf("Tour: ");
+    for (int i = 0; i < N; i++) {
+printf("%d ", tour[i]);
+    }
+printf("0\n"); // Return to the origin city
+
+    return totalCost;
+}
+
+int main() {
+int minCost = nearestNeighbor();
+printf("Minimum cost of the tour: %d\n", minCost);
+    return 0;
+}
+      
+          
+          
+          
+          
+          
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
